@@ -26,7 +26,7 @@ const Playvideo = () => {
             <img src={jack} alt="" />
             <div>
                 <p>RohanYT</p>
-                <span>1M Subscriberd</span>
+                <span>1M Subscriber</span>
             </div>
             <button>Subscribe</button>
         </div>
