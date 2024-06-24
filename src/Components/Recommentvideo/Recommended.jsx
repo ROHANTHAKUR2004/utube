@@ -1,50 +1,46 @@
-import React from 'react'
+
+import { Link } from 'react-router-dom';
+import { value_convert } from '../../data';
 import './Recommended.css'
-import thumb1 from '../../assets/thumbnail/thumbnail1.png'
-import thumb2 from '../../assets/thumbnail/thumbnail2.png'
-import thumb3 from '../../assets/thumbnail/thumbnail3.png'
-import thumb4 from '../../assets/thumbnail/thumbnail4.png'
 
-const Recommended = () => {
+import { useEffect, useState } from 'react'
+
+const Recommended = ({categoryId}) => {
+
+    const [apidata, setapidata] = useState([]);
+
+    const fetchdata = async () =>{
+        const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=21&regionCode=US&videoCategoryId=${categoryId}&key=AIzaSyDyqxX0uSeCfZJKCRlBiPSozSQah6K_QiA`
+         await fetch(url)
+         .then(res =>res.json()) 
+         .then(data => setapidata(data.items))   
+        }
+
+
+        console.log(apidata)
+        useEffect(()=>{
+            fetchdata();
+        },[]);
+
+
+
   return (
+    
     <div className='recomended'>
-        <div className="side-vid-list">
-            <img src={thumb1} alt="" />
+        {apidata.map((item,index)=>{
+          return(
+            <Link to={`/video/${item.snippet.categoryId}/${item.id}`}  
+            key={index} className="side-vid-list">
+            <img src={item.snippet.thumbnails.medium.url} alt="" />
             <div className="vid-info">
-                <h4>Lorem, ipsum dolor.</h4>
-                <p>RohanYT</p>
-                <p>2k Views</p>
+                <h4>{item.snippet.title}</h4>
+                <p>{item.snippet.channelTitle}</p>
+                <p>{value_convert(item.statistics.viewCount)} views </p>
             </div>
-        </div>
-
-        <div className="side-vid-list">
-            <img src={thumb2} alt="" />
-            <div className="vid-info">
-                <h4>Lorem, ipsum dolor.</h4>
-                <p>RohanYT</p>
-                <p>2k Views</p>
-            </div>
-        </div>
-
-        <div className="side-vid-list">
-            <img src={thumb3} alt="" />
-            <div className="vid-info">
-                <h4>Lorem, ipsum dolor.</h4>
-                <p>RohanYT</p>
-                <p>2k Views</p>
-            </div>
-        </div>
-
-
-        <div className="side-vid-list">
-            <img src={thumb4} alt="" />
-            <div className="vid-info">
-                <h4>Lorem, ipsum dolor.</h4>
-                <p>RohanYT</p>
-                <p>2k Views</p>
-            </div>
-        </div>
-
+        </Link>
+          )  
+})}
+       
     </div>
   )
 }
